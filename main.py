@@ -16,7 +16,7 @@ collection = connect_mongo()
 
 @client.command()
 async def say(ctx, what):
-    user = client.get_user(os.getenv("MY_ID"))
+    user = client.get_user(int(os.getenv("MY_ID")))
     await user.send(what)
 
 
@@ -30,7 +30,7 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    channel = client.get_channel(os.getenv("CHANNEL_ID"))
+    channel = client.get_channel(int(os.getenv("CHANNEL_ID")))
     await channel.send(f"Bot is ready")
 
 client.run(token)

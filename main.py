@@ -6,18 +6,16 @@ from dotenv import load_dotenv
 import os
 
 load_dotenv()
-
-
 token = os.getenv("BOT_TOKEN")
-client = commands.Bot(command_prefix="!",
-                      activity=discord.Game("Im being developed"), intents=discord.Intents.all())
+client = commands.Bot(command_prefix="b!",
+                      activity=discord.Game("Developed by IamEinstein"), intents=discord.Intents.all())
 collection = connect_mongo()
 
 
-@client.command()
-async def say(ctx, what):
-    user = client.get_user(int(os.getenv("MY_ID")))
-    await user.send(what)
+# @client.command()
+# async def say(ctx, what):
+#     user = client.get_user(int(os.getenv("MY_ID")))
+#     await user.send(what)
 
 
 @client.event
@@ -30,7 +28,19 @@ async def on_message(message):
 
 @client.event
 async def on_ready():
-    channel = client.get_channel(int(os.getenv("CHANNEL_ID")))
+    channel = client.get_channel(858296114415534100)
     await channel.send(f"Bot is ready")
+
+
+@client.event
+async def on_message_edit(before, after):
+    channel = client.get_channel(858296114415534100)
+    await channel.send(f"{before.author.mention} edited a message from\n `{before.content}` to `{after.content}`")
+
+
+@client.event
+async def on_message_delete(message):
+    channel = client.get_channel(858296114415534100)
+    await channel.send(f"{message.author.mention} you deleted a message:\n  {message.content}")
 
 client.run(token)

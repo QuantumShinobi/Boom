@@ -26,11 +26,12 @@ class Bot(commands.Cog):
         embed = discord.Embed(
             color=Color.blue(), url="https://github.com/IamEinstein/Boom", title=f"{before.author} edited a message", timestamp=datetime.datetime.now())
         embed.set_thumbnail(url=before.author.avatar_url)
-        print(after)
         embed.add_field(name="Original Message",
                         value=f'{before.content}', inline=False)
         embed.add_field(name="Edited Message",
                         value=f'{after.content}', inline=True)
+        embed.add_field(name="Channel", value=f"{before.channel.mention}", inline=True)
+
         if int(before.channel.id) == 858296114415534100 or before.author.bot == True or before.content == after.content:
             pass
         else:
@@ -48,6 +49,8 @@ class Bot(commands.Cog):
 
             embed.add_field(name="Message Content",
                             value=f'{message.content}', inline=False)
+            embed.add_field(name="Channel", value=f"{message.channel.mention}", inline=True)
+        
             await channel.send(embed=embed)
 
     @commands.command()

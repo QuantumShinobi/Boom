@@ -2,6 +2,8 @@ import discord
 import datetime
 from discord import Color
 from discord.ext import commands
+import sys
+from .embeds import bot
 
 
 class Bot(commands.Cog):
@@ -16,7 +18,7 @@ class Bot(commands.Cog):
     async def on_ready(self):
         "Tells mods when the bot is ready"
         channel = self.bot.get_channel(858296114415534100)
-        await channel.send(f"Bot is ready")
+        await channel.send(embed=bot.ready_embed(sys.platform))
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
@@ -30,7 +32,8 @@ class Bot(commands.Cog):
                         value=f'{before.content}', inline=False)
         embed.add_field(name="Edited Message",
                         value=f'{after.content}', inline=True)
-        embed.add_field(name="Channel", value=f"{before.channel.mention}", inline=True)
+        embed.add_field(
+            name="Channel", value=f"{before.channel.mention}", inline=True)
 
         if int(before.channel.id) == 858296114415534100 or before.author.bot == True or before.content == after.content:
             pass
@@ -49,8 +52,9 @@ class Bot(commands.Cog):
 
             embed.add_field(name="Message Content",
                             value=f'{message.content}', inline=False)
-            embed.add_field(name="Channel", value=f"{message.channel.mention}", inline=True)
-        
+            embed.add_field(
+                name="Channel", value=f"{message.channel.mention}", inline=True)
+
             await channel.send(embed=embed)
 
     @commands.command()

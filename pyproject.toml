@@ -10,6 +10,9 @@ pymongo = "^3.11.4"
 python-dotenv = "^0.18.0"
 discord = "^1.7.3"
 flask = "^2.0.1"
+umongo = "^3.0.0"
+marshmallow = "^3.12.1"
+dnspython = "^2.1.0"
 
 [tool.poetry.dev-dependencies]
 

@@ -11,7 +11,7 @@ class RMTCommands(commands.Cog):
     @commands.command()
     async def register(self, ctx):
         author = ctx.author
-        if RMTian.is_registered(id=author.id):
+        if await RMTian.is_registered(id=author.id):
             return ctx.send("You are already register")
         await ctx.send("Please enter your name")
 
@@ -32,7 +32,7 @@ class RMTCommands(commands.Cog):
     async def remove(self, ctx):
 
         id = ctx.author.id
-        if not RMTian.is_registered(id=id):
+        if not await RMTian.is_registered(id=id):
             return ctx.send("You are not registered")
         await ctx.send("Type `yes` if you want to confirm your removal..")
         try:

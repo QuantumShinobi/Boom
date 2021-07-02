@@ -12,7 +12,7 @@ class RMTCommands(commands.Cog):
     async def register(self, ctx):
         author = ctx.author
         if await RMTian.is_registered(id=author.id):
-            return ctx.send("You are already register")
+            return await ctx.send("You are already register")
         await ctx.send("Please enter your name")
 
         def check(u, *args, **kwargs):

@@ -18,7 +18,9 @@ class Bot(commands.Cog):
     async def on_ready(self):
         "Tells mods when the bot is ready"
         channel = self.bot.get_channel(858296114415534100)
+        other_channel = self.bot.get_channel(858984166136610826)
         await channel.send(embed=bot.ready_embed(sys.platform))
+        await other_channel.send(embed=bot.ready_embed(sys.platform))
 
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):

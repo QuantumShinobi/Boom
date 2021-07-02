@@ -1,4 +1,5 @@
 import umongo
+import asyncio
 import pymongo
 from dotenv import load_dotenv
 import os
@@ -11,6 +12,9 @@ load_dotenv()
 db = pymongo.MongoClient(os.getenv("DATABASE_URI"))['boom']
 
 instance = PyMongoInstance(db)
+
+
+collection = db['data']
 
 
 @instance.register
@@ -42,6 +46,13 @@ async def register(name, id):
         return True
 
 
+async def remove_user(id):
+    if await RMTian.is_registered(id=id):
+        collection.delete_one({"discord_id": id})
+        print("Done")
+        return True
+    else:
+        return False
 # collection = db['data']
 # me = RMTian(name="Ash", discord_id=764415588873273345)
 # if (collection.count_documents({"name": me.name})) >= 1:
@@ -94,3 +105,6 @@ async def register(name, id):
 
 # count = collection.count_documents({})
 # print(count)
+
+if __name__ == "__main__":
+    asyncio.run(remove_user(764180228369023006))

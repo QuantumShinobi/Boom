@@ -12,10 +12,10 @@ client = commands.Bot(command_prefix="b!",
                       activity=discord.Game("Developed by IamEinstein(Rishit)"), intents=discord.Intents.all(), help_command=None)
 client.add_cog(Bot(client))
 client.add_cog(RMTCommands(client))
+client.add_cog(Poll(client))
 if sys.platform == "linux":
     from keep_alive import keep_alive
     keep_alive()
     client.run(token)
 else:
-    client.add_cog(Poll(client))
     client.run(token)

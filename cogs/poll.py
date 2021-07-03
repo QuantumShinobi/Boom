@@ -2,6 +2,7 @@ import asyncio
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions
 import re
+import discord
 
 
 class Poll(commands.Cog):
@@ -28,7 +29,6 @@ For eg, if you want the poll to be for 2 hours, type 2
             except asyncio.TimeoutError:
                 return await ctx.send("Timeout")
             else:
-                print(int(time.content))
 
                 re_check = re.match(r'\d', str(time.content))
 
@@ -40,26 +40,56 @@ For eg, if you want the poll to be for 2 hours, type 2
                     except asyncio.TimeoutError:
                         return await ctx.send("Timeout")
                     else:
-                        print(gw_channel.content)
 
                         for channel in ctx.guild.channels:
                             if str(channel.mention) == str(gw_channel.content):
-                                await ctx.send("""
-                                Okay, now type the emojis with which u want to react
-                                For eg, if the emojis are 😇 and 😈
-                                Type
-                                `😇 😈`
-                                """)
+                                gw_channel_name = gw_channel.content[2:-2]
+                                gw_channel_obj = channel
+                                break
+                            else:
+                                gw_channel_name = None
+                                continue
+
+                        if gw_channel_name != None:
+                            await ctx.send("""
+Okay, now type the emojis with which u want to react
+For eg, if the emojis are 😇 and 😈
+Type
+`😇 😈`
+                            """)
+                            try:
+                                reactions = await self.bot.wait_for("message", timeout=30, check=lambda msg: msg.author.id == ctx.author.id)
+                            except asyncio.TimeoutError:
+                                return await ctx.send("Timeout")
+                            else:
+                                reaction_list = reactions.content.split()
+
+                                await ctx.send("Enter the content")
                                 try:
-                                    reactions = await self.bot.wait_for("message", timeout=30, check=lambda msg: msg.content.author == ctx.author)
+                                    message = await self.bot.wait_for("message", timeout=30, check=lambda message: message.author.id == ctx.author.id)
+
                                 except asyncio.TimeoutError:
                                     return await ctx.send("Timeout")
                                 else:
-                                    reaction = reactions.content.split()
-                                    print(reaction)
+                                    content = message.content
+                                    await ctx.send("Creating poll")
 
-                            else:
-                                return await ctx.send("Channel not found")
+                                    channel = self.bot.get_channel(
+                                        858984166136610826)
+                                    print(channel)
+                                    await self.create_poll(title=title.content, content=content, channel_id=gw_channel_obj, reactions=reaction_list)
+
+                        else:
+                            return await ctx.send("Channel not found")
 
                 else:
                     return await ctx.send("That doesnt seem to be a valid duration")
+
+    @commands.command()
+    async def create_poll(self, title, content, channel_id, reactions):
+        embed = discord.Embed(
+            title=title, description=content, color=discord.Color.blurple())
+
+        msg = await channel_id.send(embed=embed)
+        for reaction in reactions:
+            await msg.add_reaction(reaction)

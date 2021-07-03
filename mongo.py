@@ -1,4 +1,5 @@
 import umongo
+import discord
 import asyncio
 import pymongo
 from dotenv import load_dotenv
@@ -53,6 +54,30 @@ async def remove_user(id):
         return True
     else:
         return False
+
+
+@instance.register
+class Poll(Document):
+    title = fields.StringField(unique=False)
+    reactions = fields.ListField(fields.StringField())
+    channel = fields.IntegerField()
+    time = fields.DateTimeField()
+    content = fields.StringField()
+
+    async def create_poll(self, bot, ctx):
+        embed = discord.Embed(
+            title=self.title, description=self.content, color=discord.Color.blurple())
+        channel = bot.get_channel(self.channel)
+        message = await channel.send(embed=embed)
+        for reaction in self.reactions:
+            try:
+                message.add_reaction(reaction)
+            except Exception:
+                await ctx.send(Exception)
+
+    class Meta:
+        collection_name = "data"
+
 # collection = db['data']
 # me = RMTian(name="Ash", discord_id=764415588873273345)
 # if (collection.count_documents({"name": me.name})) >= 1:

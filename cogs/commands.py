@@ -12,21 +12,19 @@ class RMTCommands(commands.Cog):
     async def register(self, ctx):
         author = ctx.author
         if await RMTian.is_registered(id=author.id):
-            return await ctx.send("You are already registered")
+            return await ctx.send(f"{ctx.author.mention}, You are already registered")
         await ctx.send("Please enter your name")
 
-        def check(u, *args, **kwargs):
-            return u == author
         try:
             name = await self.bot.wait_for("message", timeout=30, check=lambda message: message.author == ctx.author)
             print(name.content)
         except asyncio.TimeoutError:
-            return await ctx.send("The request to register has timed out. Kindly restart the process")
+            return await ctx.send(f"{ctx.author.mention},The request to register has timed out. Kindly restart the process")
         else:
             if await register(name=str(name.content), id=ctx.author.id):
-                await ctx.send("You have been registered as an RMTian")
+                await ctx.send(f"{ctx.author.mention}, you have been registered as an RMTian")
             else:
-                await ctx.send("You are already registered")
+                await ctx.send(f"{ctx.author.mention}, you are already registered")
 
     @commands.command()
     async def remove(self, ctx):
@@ -44,6 +42,6 @@ class RMTCommands(commands.Cog):
         except asyncio.TimeoutError:
             return await ctx.send("No response was recieved, the process has been cancelled")
         if await remove_user(id):
-            await ctx.send("You have been removed")
+            await ctx.send(f"{ctx.author.mention}, you have been removed")
         else:
             await ctx.send("You are not registered")

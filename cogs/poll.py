@@ -84,7 +84,7 @@ class Poll(commands.Cog):
 
         def check(reaction, u):
             return reaction.message.id == msg.id and str(reaction.emoji) in reactions
-        # await asyncio.sleep(time)
+
         while True:
             reaction, user = await self.bot.wait_for("reaction_add", check=check)
             if reaction:

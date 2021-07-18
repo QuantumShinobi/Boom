@@ -131,3 +131,6 @@ users.txt
 keep_alive.py
 ip.py
 get.py
+test.py
+test_bot.py
+discord.log

@@ -1,0 +1,7 @@
+{
+  "editor.cursorStyle": "line",
+  "editor.cursorSmoothCaretAnimation": true,
+  "workbench.iconTheme": "material-icon-theme",
+  "workbench.colorTheme": "Monokai",
+  "editor.cursorBlinking": "expand"
+}

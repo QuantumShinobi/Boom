@@ -1,27 +1,33 @@
-import umongo
-import discord
-import asyncio
+
+from turtle import update
 import pymongo
 from dotenv import load_dotenv
 import os
+from utils.tz import *
+from datetime import datetime, timedelta, timezone
 from umongo import Document, fields
 from umongo.frameworks import PyMongoInstance
 from marshmallow.exceptions import ValidationError
 load_dotenv()
 
 # !umongo
+#  Basic setup
 db = pymongo.MongoClient(os.getenv("DATABASE_URI"))['boom']
 
 instance = PyMongoInstance(db)
-
-
 collection = db['data']
+polls = db['polls']
+# User model
 
 
 @instance.register
 class RMTian(Document):
+    """
+    Model for each user
+    """
     name = fields.StringField(required=True)
     discord_id = fields.IntegerField(unique=True)
+    send_dm = fields.BooleanField(default=True)
 
     class Meta:
         collection_name = "data"
@@ -50,86 +56,46 @@ async def register(name, id):
 async def remove_user(id):
     if await RMTian.is_registered(id=id):
         collection.delete_one({"discord_id": id})
-        print("Done")
         return True
     else:
         return False
 
+# Poll Model
+
 
 @instance.register
-class Poll(Document):
+class PollModel(Document):
+    """
+    MongoDB model for a poll
+    """
+    class Meta:
+        collection_name = "polls"
+
     title = fields.StringField(unique=False)
     reactions = fields.ListField(fields.StringField())
-    channel = fields.IntegerField()
-    time = fields.DateTimeField()
-    content = fields.StringField()
+    channel_id = fields.IntegerField(required=True)
+    start_time = fields.DateTimeField(required=True)
+    end_time = fields.DateTimeField(required=True)
+    content = fields.StringField(required=True)
+    poll_id = fields.IntegerField(required=True, unique=True)
+    ended = fields.BooleanField(default=False)
+    winner = fields.StringField(unique=False, default="None")
+    winner_reaction_count = fields.IntegerField(default=0)
+    tie = fields.BooleanField(default=False)
+    tie_reaction_list = fields.ListField(fields.StringField(), default=[])
 
-    async def create_poll(self, bot, ctx):
-        embed = discord.Embed(
-            title=self.title, description=self.content, color=discord.Color.blurple())
-        channel = bot.get_channel(self.channel)
-        message = await channel.send(embed=embed)
-        for reaction in self.reactions:
-            try:
-                message.add_reaction(reaction)
-            except Exception:
-                await ctx.send(Exception)
-
-    class Meta:
-        collection_name = "data"
-
-# collection = db['data']
-# me = RMTian(name="Ash", discord_id=764415588873273345)
-# if (collection.count_documents({"name": me.name})) >= 1:
-#     print("User already exists")
-# else:
-#     me.commit()
-
-# if db.collection.count_documents({ 'name': "Ash" }, limit = 1) != 0:
-#
-# collection.delete_many({})
+    async def check_ended_polls(self=None):
+        for poll in polls.find({'ended': False}):
+            ended_list = []
+            if IST.localize(poll['end_time']) <= datetime.now(tz=IST):
+                ended_list.append(poll)
+                polls.find_and_modify(query={"_id": poll['_id']}, update={
+                    '$set': {'ended': True}})
+            return ended_list
+        else:
+            return None
 
 
-# for i in RMTian.find({"name": "Ash"}):
-#     print(i)
-# print("Running")
-# result = db['data'].find({"name": "hmm"})
-# print("got result")
-# print(result
-# for i in result:
-#     print("hmm")
-#     print(i)
-
-
-# def connect_mongo():
-
-#     cluster = pymongo.MongoClient(
-#         os.getenv("DATABASE_URI"))
-#     db = cluster["test"]
-#     instance
-#     collection = db["test"]
-#     return collection
-
-
-# collection.insert_one(data)
-# to find data
-# results = collection.find({"name": "Rishit"})
-# for result in results:
-#     print(result)
-
-# Update data
-# results = collection.update_one(
-#     {"name": "Rishit"}, {"$set": {"github": "IamEinstein"}})
-# delete
-# results = collection.delete_one({"_id": 1})
-# results = collection.delete_many({"name": "Rishit"})
-
-
-# data count
-
-
-# count = collection.count_documents({})
-# print(count)
-
-if __name__ == "__main__":
-    asyncio.run(remove_user(764180228369023006))
+for user in collection.find():
+    collection.find_and_modify(query={"_id": user['_id']}, update={
+        "$set": {"send_dm": True}})

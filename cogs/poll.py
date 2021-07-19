@@ -6,11 +6,10 @@ import discord
 from .messages.poll import *
 from datetime import datetime, timedelta
 from utils.tz import IST, format_time
-from mongo import PollModel, polls, collection
+from mongo import PollModel, polls
 import logging
 import traceback
 # TODO:  Make tie mechanism for polls
-# TODO:  Make "makepoll" command
 
 
 class Poll(commands.Cog):
@@ -164,3 +163,27 @@ class Poll(commands.Cog):
     async def before_check_ended(self):
         "Makes sure that the bot is ready before it checks for ended polls"
         await self.bot.wait_until_ready()
+
+    @commands.command(pass_context=True)
+    @has_permissions(administrator=True, manage_guild=True)
+    async def makepoll(self, ctx, channel, time, title, *, content):
+        time_check = re.match(r'\d', str(time))
+        for gw_channel in ctx.guild.channels:
+            if str(gw_channel.mention) == str(channel):
+                gw_channel_name = channel[2:-2]
+                gw_channel_obj = gw_channel
+                break
+            else:
+                gw_channel_name = None
+                continue
+        if gw_channel_name and gw_channel_obj and time_check:
+            await ctx.send(react_message)
+            try:
+                reactions = await self.bot.wait_for("message", timeout=30, check=lambda msg: msg.author.id == ctx.author.id)
+            except asyncio.TimeoutError:
+                return await ctx.send(timeout_message)
+            else:
+                reaction_list = reactions.content.split()
+                await self.create_poll(title=title, content=content, channel=gw_channel_obj, reactions=reaction_list, time=int(time), time_created=datetime.now(tz=IST))
+
+    # async def help(self, ct)

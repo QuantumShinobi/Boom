@@ -1,13 +1,10 @@
-
-from turtle import update
 import pymongo
 from dotenv import load_dotenv
 import os
-from utils.tz import *
-from datetime import datetime, timedelta, timezone
+from utils.tz import IST, format_time, datetime_from_utc_to_local
+from datetime import datetime
 from umongo import Document, fields
 from umongo.frameworks import PyMongoInstance
-from marshmallow.exceptions import ValidationError
 load_dotenv()
 
 # !umongo
@@ -87,7 +84,7 @@ class PollModel(Document):
     async def check_ended_polls(self=None):
         for poll in polls.find({'ended': False}):
             ended_list = []
-            if IST.localize(poll['end_time']) <= datetime.now(tz=IST):
+            if IST.localize(datetime_from_utc_to_local(poll['end_time'])) <= datetime.now(tz=IST):
                 ended_list.append(poll)
                 polls.find_and_modify(query={"_id": poll['_id']}, update={
                     '$set': {'ended': True}})

@@ -1,6 +1,6 @@
 duration_message = '''
-How long should the poll last(duration in hrs)
-For eg, if you want the poll to be for 2 hours, type 2
+How long should the poll last(duration in minutes)
+For eg, if you want the poll to be for 2 hours, type 120
 '''
 channel_message = "Which channel do you want to the poll to be in?"
 timeout_message = """

@@ -6,7 +6,7 @@ import discord
 from .messages.poll import *
 from datetime import datetime, timedelta
 from utils.tz import IST, format_time
-from mongo import PollModel
+from mongo import PollModel, polls, collection
 import logging
 import traceback
 # TODO:  Make tie mechanism for polls
@@ -121,7 +121,7 @@ class Poll(commands.Cog):
         used to test polls
         """
         if ctx.author.id == 764415588873273345:
-            await self.create_poll(title="Test", content="oof", channel=ctx.channel, reactions=['🤣', '😔', '😈'], time=20, time_created=datetime.now(tz=IST))
+            await self.create_poll(title="Test", content="oof", channel=ctx.channel, reactions=['🤣', '😔', '😈'], time=0.5, time_created=datetime.now(tz=IST))
 
     async def end_poll(self, poll: PollModel):
         """
@@ -141,14 +141,20 @@ class Poll(commands.Cog):
             # elif reaction_count == reaction.count:
 
         if reaction_emoji:
-            await channel.send(f"{reaction_emoji} has won")
+            await msg.reply(f"{reaction_emoji} has won")
             poll['ended'] = True
+            poll['winner'] = reaction_emoji
+            poll['winner_reaction_count'] = reaction_count
+            print(poll)
+            polls.find_and_modify(query={
+                                  "poll_id": poll['poll_id'], "channel_id": poll['channel_id']}, update={"$set": poll})
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(seconds=45)
     async def check_ended(self):
         """
         Checks for ended polls
         """
+        print("Checking for ended polls")
         ended_polls = await PollModel.check_ended_polls()
         if ended_polls:
             for ended_poll in ended_polls:

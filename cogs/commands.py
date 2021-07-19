@@ -66,7 +66,7 @@ class RMTCommands(commands.Cog):
         time_after = now.replace(hour=15, minute=0, second=0, microsecond=0)
         if now > time_before and now < time_after:
             from mongo import collection
-            for user in collection.find({}):
+            for user in collection.find({"send_dm": True}):
                 test_ids = [
                     765838723169386516, 764415588873273345, 795513154514714634]
                 if user['discord_id'] in test_ids:

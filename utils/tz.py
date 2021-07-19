@@ -1,10 +1,18 @@
 # Source - https://timezonedb.com/time-zones/Africa/Banjul
 import pytz
 from datetime import datetime as dt
+import time
 # Datetime functions
 
 
-def format_time(given_time: dt):
+def datetime_from_utc_to_local(utc_datetime):
+    now_timestamp = time.time()
+    offset = dt.fromtimestamp(
+        now_timestamp) - dt.utcfromtimestamp(now_timestamp)
+    return utc_datetime + offset
+
+
+def format_time(given_time):
     date = str(given_time)[8:10]
     month = str(given_time)[5:7]
     year = str(given_time)[0:4]

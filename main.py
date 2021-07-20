@@ -1,4 +1,3 @@
-import logging
 import discord
 from discord.ext import commands
 from cogs.bot import Bot
@@ -22,6 +21,7 @@ if sys.platform == "linux":
     print('Waiting for bot to get ready')
     client.run(token)
 else:
+    import logging
     logger = logging.getLogger('discord')
     logger.setLevel(logging.DEBUG)
     handler = logging.FileHandler(

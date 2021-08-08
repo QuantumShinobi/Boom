@@ -50,7 +50,7 @@ class RMTCommands(commands.Cog):
 
     @commands.command(description="If you do not wish to recive DMs from the bot")
     async def nodms(self, ctx):
-        if RMTian.is_registered(id=ctx.author.id):
+        if await RMTian.is_registered(id=ctx.author.id):
             await ctx.send("Ok wait")
         else:
             await ctx.send(f"Oof {ctx.author.mention}!, you need to be registered to run this command.")

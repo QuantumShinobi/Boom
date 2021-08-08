@@ -1,9 +1,8 @@
 import asyncio
 from discord.ext import commands, tasks
-from django import test
 from mongo import *
 import pytz
-from datetime import datetime, timedelta
+from datetime import datetime
 from .messages.dms import *
 
 
@@ -12,7 +11,7 @@ class RMTCommands(commands.Cog):
         self.bot = bot
         # self.send_dm.start()
 
-    @commands.command()
+    @commands.command(description="Register yourself as an RMTian")
     async def register(self, ctx):
         author = ctx.author
         if await RMTian.is_registered(id=author.id):
@@ -49,7 +48,7 @@ class RMTCommands(commands.Cog):
         else:
             await ctx.send("You are not registered")
 
-    @commands.command()
+    @commands.command(description="If you do not wish to recive DMs from the bot")
     async def nodms(self, ctx):
         if RMTian.is_registered(id=ctx.author.id):
             await ctx.send("Ok wait")
@@ -119,3 +118,7 @@ class RMTCommands(commands.Cog):
         print("Waiting for bot to get ready")
         await self.bot.wait_until_ready()
         print("Bot is ready")
+
+
+def setup(bot: commands.Bot):
+    bot.add_cog(RMTCommands(bot))

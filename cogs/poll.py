@@ -7,8 +7,7 @@ from .messages.poll import *
 from datetime import datetime, timedelta
 from utils.tz import IST, format_time
 from mongo import PollModel, polls
-import logging
-import traceback
+from .descriptions import poll_description, testpoll_description, makepoll_description
 # TODO:  Make tie mechanism for polls
 
 
@@ -22,7 +21,7 @@ class Poll(commands.Cog):
         self.bot = bot
         self.check_ended.start()
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, description=poll_description)
     @has_permissions(administrator=True, manage_guild=True)
     async def poll(self, ctx):
         """
@@ -92,7 +91,7 @@ class Poll(commands.Cog):
 
     async def create_poll(self, title: str, content: str, channel, reactions: list, time: int, time_created: datetime):
         """
-        Function for creating a poll and registering it in the database
+        Method for creating a poll and registering it in the database
         """
         time_to_end = timedelta(minutes=time) + time_created
         embed = discord.Embed(
@@ -108,12 +107,11 @@ class Poll(commands.Cog):
         try:
             poll.commit()
         except Exception as e:
-            logging.error(traceback.format_exc())
-            return False
+            await channel.send(e)
         else:
             return True
 
-    @commands.command()
+    @commands.command(description=testpoll_description)
     async def testpoll(self, ctx):
         """
         A (temporary) testing command,
@@ -164,9 +162,9 @@ class Poll(commands.Cog):
         "Makes sure that the bot is ready before it checks for ended polls"
         await self.bot.wait_until_ready()
 
-    @commands.command(pass_context=True)
+    @commands.command(pass_context=True, description=makepoll_description)
     @has_permissions(administrator=True, manage_guild=True)
-    async def makepoll(self, ctx, channel, time, title, *, content):
+    async def makepoll(self, ctx, channel, time, title, *, content, **kwargs):
         time_check = re.match(r'\d', str(time))
         for gw_channel in ctx.guild.channels:
             if str(gw_channel.mention) == str(channel):
@@ -186,4 +184,6 @@ class Poll(commands.Cog):
                 reaction_list = reactions.content.split()
                 await self.create_poll(title=title, content=content, channel=gw_channel_obj, reactions=reaction_list, time=int(time), time_created=datetime.now(tz=IST))
 
-    # async def help(self, ct)
+
+def setup(bot):
+    bot.add_cog(Poll(bot))

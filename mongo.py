@@ -1,7 +1,7 @@
 import pymongo
 from dotenv import load_dotenv
 import os
-from utils.tz import IST, format_time, datetime_from_utc_to_local
+from utils.tz import IST, datetime_from_utc_to_local
 from datetime import datetime
 from umongo import Document, fields
 from umongo.frameworks import PyMongoInstance

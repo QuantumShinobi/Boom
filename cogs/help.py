@@ -37,7 +37,7 @@ class CustomHelpCommand(commands.HelpCommand):
 
     async def send_bot_help(self, mapping):
         embed = discord.Embed(color=give_random_color(),
-                              title="Boom Help", description="Below is the list of commands. Pls type cg!help <command> to get more information.", timestamp=datetime.now(tz=IST))
+                              title="Boom Help", description="Below is the list of commands. Pls type b!help <command> to get more information.", timestamp=datetime.now(tz=IST))
         embed.set_footer(text=":)", icon_url=discord.Embed.Empty)
         commands = mapping.values()
         # Arrange according to category

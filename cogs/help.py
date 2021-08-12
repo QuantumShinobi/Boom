@@ -14,14 +14,16 @@ class CustomHelpCommand(commands.HelpCommand):
         if isinstance(error, commands.CommandInvokeError):
             await ctx.send(str(error.original))
 
-    def make_page_embed(self, commands, title="Boom Help", description=discord.Embed.Empty):
+    @staticmethod
+    def make_page_embed(commands, title="Boom Help", description=discord.Embed.Empty):
         embed = discord.Embed(
             color=0xFE9AC9, title=title, description=description)
         embed.set_footer(
             text=f'Use "b!help command" for more info on a command.'
         )
 
-    def make_default_embed(self, cogs, title="Categories", description=discord.Embed.Empty):
+    @staticmethod
+    def make_default_embed(cogs, title="Categories", description=discord.Embed.Empty):
         embed = discord.Embed(
             color=0xFE9AC9, title=title, description=description)
         counter = 0

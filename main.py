@@ -18,7 +18,7 @@ for i in cogs.cogs:
 
 
 if sys.platform == "linux":
-    from keep_alive import keep_alive
+    from keep_repl_alive import keep_alive
     keep_alive()
     print('Waiting for bot to get ready')
     client.run(token)

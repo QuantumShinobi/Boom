@@ -5,6 +5,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Bot rewrite",
+      "type": "python",
+      "request": "launch",
+      "program": "bot.py",
+      "console": "integratedTerminal"
+    },
+    {
       "name": "Run bot",
       "type": "python",
       "request": "launch",

@@ -13,6 +13,7 @@ flask = "^2.0.1"
 umongo = "^3.0.0"
 marshmallow = "^3.12.1"
 dnspython = "^2.1.0"
+discord-py-interactions = "^3.0.2"
 
 [tool.poetry.dev-dependencies]
 

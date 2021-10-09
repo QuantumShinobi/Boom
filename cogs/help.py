@@ -40,7 +40,7 @@ class CustomHelpCommand(commands.HelpCommand):
     async def send_bot_help(self, mapping):
         embed = discord.Embed(color=0xFE9AC9,
                               title="Boom Help", description="Below is the list of commands. Pls type b!help <command> to get more information.", timestamp=datetime.now(tz=IST))
-        embed.set_footer(text=":)", icon_url=discord.Embed.Empty)
+        embed.set_footer(text="Made by Ash#7866", icon_url=discord.Embed.Empty)
         # commands = mapping.values()
         # Arrange according to category
         # 1. Get all keys as list
@@ -49,14 +49,19 @@ class CustomHelpCommand(commands.HelpCommand):
         embed.add_field(
             name="General", value="`avatar`, `avatar_url`", inline=False)
         embed.add_field(
-            name="Fun", value="`insult`, `meme`, `joke`, `pokememe`", inline=False)
+            name="<a:856127288000774164:896321154380365886>Fun", value="`insult`, `meme`, `joke`, `pokememe`, `wasted`, `glass`, `triggered`, `jail`, `passed`, `comrade`,`colour`, `youtube`, `tweet`, `stupid`, `simp`, `lolice`", inline=False)
         embed.add_field(
-            name="Admin", value="`kick`, `ban`, `purge`, `poll`, `makepoll`", inline=False)
+            name="<a:856127950034567188:896321154501988384>Admin", value="`kick`, `ban`, `purge`, `poll`, `makepoll`", inline=False)
         embed.add_field(
-            name="Animals", value="`dog`, `cat`, `fox`, `panda`, `red_panda`, `koala`, `bird`, `raccoon`, `kangaroo`", inline=False)
+            name="<:5041confusedcat:896352786965483570>Animals", value="`dog`, `cat`, `fox`, `panda`, `red_panda`, `koala`, `bird`, `raccoon`, `kangaroo`", inline=False)
         embed.add_field(
-            name="Pokemon", value="`pokedex`, `pikachu`", inline=False)
-        embed.add_field(name="RMT", value="`register`, `remove`", inline=False)
+            name="<a:7881pikahi:896341418958790666>Pokemon", value="`pokedex`, `pikachu`", inline=False)
+        embed.add_field(name="<:hmmmmm:896353837005287485>RMT",
+                        value="`register`, `remove`", inline=False)
+        embed.add_field(name="<:AdobePhotoshopLogo:896354208834547722>Image Manipulation",
+                        value="`greyscale`, `invert`, `invert_greyscale`, `brightness`, `threshold`, `sepia`, `red`, `green`, `bloo`, `blurple`, `blurple2`, `pixelate`, `blur`")
+        embed.add_field(
+            name="<a:1350rainbowsparkles:896357165298774086>Special", value="`petpet`, `among_us`")
         await self.context.message.reply(embed=embed)
 
     async def send_cog_help(self, cog):

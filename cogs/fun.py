@@ -50,7 +50,7 @@ class Fun(commands.Cog):
             # embed.add_field(name="Category", value=category)
             await ctx.message.reply(embed=embed)
 
-    @commands.command(aliases=['pfp'])
+    @commands.command(aliases=['pfp', 'av'])
     async def avatar(self, ctx: commands.Context, *, member: discord.Member = None):
         if member is None:
             member = ctx.author

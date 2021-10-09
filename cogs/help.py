@@ -38,24 +38,25 @@ class CustomHelpCommand(commands.HelpCommand):
         return embed
 
     async def send_bot_help(self, mapping):
-        embed = discord.Embed(color=give_random_color(),
+        embed = discord.Embed(color=0xFE9AC9,
                               title="Boom Help", description="Below is the list of commands. Pls type b!help <command> to get more information.", timestamp=datetime.now(tz=IST))
         embed.set_footer(text=":)", icon_url=discord.Embed.Empty)
-        commands = mapping.values()
+        # commands = mapping.values()
         # Arrange according to category
         # 1. Get all keys as list
         # 2. Iterate through list to get values
         # 3.Add the values in that category
-        for command_list in commands:
-
-            for command in command_list:
-                if command.description != None and command.description != "" and command.name != "help" and command.name != "invite":
-                    embed.add_field(name=f"{command.name}",
-                                    value=f"{command.description}", inline=False)
-                elif command.name != "help" and command.name != "invite":
-                    embed.add_field(name=f"{command.name}",
-                                    value=f"No description", inline=True)
-
+        embed.add_field(
+            name="General", value="`avatar`, `avatar_url`", inline=False)
+        embed.add_field(
+            name="Fun", value="`insult`, `meme`, `joke`, `pokememe`", inline=False)
+        embed.add_field(
+            name="Admin", value="`kick`, `ban`, `purge`, `poll`, `makepoll`", inline=False)
+        embed.add_field(
+            name="Animals", value="`dog`, `cat`, `fox`, `panda`, `red_panda`, `koala`, `bird`, `raccoon`, `kangaroo`", inline=False)
+        embed.add_field(
+            name="Pokemon", value="`pokedex`, `pikachu`", inline=False)
+        embed.add_field(name="RMT", value="`register`, `remove`", inline=False)
         await self.context.message.reply(embed=embed)
 
     async def send_cog_help(self, cog):

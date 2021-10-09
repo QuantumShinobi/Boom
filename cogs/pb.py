@@ -61,10 +61,6 @@ class PikaBot(commands.Cog):
 
                 await session.close()
 
-    @commands.command()
-    async def avatar(ctx, *, member: discord.Member = None):
-        await ctx.send(member.avatar_url)
-
     # Kick Command
 
     @commands.command()

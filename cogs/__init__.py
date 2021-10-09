@@ -4,5 +4,6 @@ cogs = (
     "poll",
     "help",
     "fun",
-    'pb'
+    'mod',
+    'api'
 )

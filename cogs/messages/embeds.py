@@ -134,3 +134,10 @@ def leave_embed(user: discord.User):
     embed = discord.Embed(colour=give_random_color(
     ), title="A Member has left us.", description=f"{user.mention} has left the server")
     return embed
+
+
+def animal_image_embed(img_url: str, fact: str, animal):
+    embed = discord.Embed(colour=give_random_color(),
+                          title=f"{animal}", description=f"{fact}")
+    embed.set_image(url=img_url)
+    return embed

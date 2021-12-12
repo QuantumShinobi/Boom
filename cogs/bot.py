@@ -6,7 +6,11 @@ import discord
 import os
 from discord.ext import commands
 import sys
+from discord import Webhook, RequestsWebhookAdapter
+from dotenv import load_dotenv
 from .messages.embeds import ready_embed, edit_msg, del_msg, dm_join_embed, leave_embed
+
+load_dotenv()
 
 
 class Bot(commands.Cog):
@@ -16,6 +20,11 @@ class Bot(commands.Cog):
 
     def __init__(self, bot: commands.Bot):
         self.bot = bot
+        self.log_hook = discord.Webhook.from_url(url=os.getenv("LOG_WEBHOOK"),
+                                                 adapter=RequestsWebhookAdapter())
+        self.purge_hook = discord.Webhook.from_url(url=os.getenv("PURGE_WEBHOOK"),
+                                                   adapter=RequestsWebhookAdapter())
+        self.log_hook_alt = discord.Webhook.from_url(url=os.getenv("LOG_HOOK"))
 
     @commands.Cog.listener()
     async def on_ready(self):
@@ -35,7 +44,8 @@ class Bot(commands.Cog):
         if int(before.channel.id) == 858296114415534100 or before.author.bot == True or before.content == after.content:
             pass
         else:
-            await channel.send(embed=edit_msg(before, after))
+            self.log_hook.send(embed=edit_msg(before, after))
+            self.log_hook_alt.send(embed=edit_msg(before, after))
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
@@ -45,7 +55,8 @@ class Bot(commands.Cog):
         if int(message.channel.id) == 858296114415534100:
             pass
         else:
-            await channel.send(embed=del_msg(message))
+            self.log_hook.send(embed=del_msg(message))
+            self.log_hook_alt.send(embed=del_msg(message))
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
@@ -74,6 +85,16 @@ class Bot(commands.Cog):
             return await ctx.author.send(os.getenv("BOT_LINK"))
         else:
             return await ctx.send("You are not authorised to use this command")
+
+    @commands.Cog.listener()
+    async def on_bulk_message_delete(self, messages):
+        for message in messages:
+            # try:
+            #   e = message.embed
+            #   self.purge_hook.send("Message with embed deleted",embed=message.embed)
+            # except AttributeError:
+            #   pass
+            self.purge_hook.send(embed=del_msg(message))
 
 
 def setup(bot):
